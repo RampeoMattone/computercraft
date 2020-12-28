@@ -18,7 +18,7 @@ local function fuel()
 			turtle.select(i) -- select each slot
 			turtle.refuel(turtle.getItemCount()) -- try to refuel
 		end
-	else if turtle.getFuelLevel() == 0 then -- if we need to refuel because the level is critically low (aka 0)
+	elseif turtle.getFuelLevel() == 0 then -- if we need to refuel because the level is critically low (aka 0)
 		turtle.select(16) -- we select the fuel ender chest
 		repeat turtle.digUp() until turtle.placeUp() -- make sure to free space above the turtle and place the chest
 		repeat until turtle.suckUp() -- we wait until we get fuel and place it in slot 16
