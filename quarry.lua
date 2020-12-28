@@ -87,7 +87,7 @@ end
 -- setup phase (break the first block and get in the corner of the selected area)
 check() -- check the inventory to see if it needs emptying
 fuel() -- before we move we need to check out fuel
-forward() -- then we can move
+repeat turtle.digDown() until turtle.down() -- go down in the hole
 -- repetition phase (excavate the whole block)
 for z=1, dep do -- we dig until we reach the desired depth
 	for y=1, dim do -- y is the lane
@@ -106,7 +106,7 @@ for z=1, dep do -- we dig until we reach the desired depth
 	-- we dig down a layer and we repeat the process
 	if z ~= dep then -- unless we are on the last layer we want to turn dig down and descend
 		check() -- check to see if inventory is full
-		turtle.digDown() -- dig down
-		repeat until turtle.down() -- go down in the hole
+		fuel() -- before we move we need to check out fuel
+		repeat turtle.digDown() until turtle.down() -- go down in the hole
 	end
 end
