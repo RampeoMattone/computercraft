@@ -14,8 +14,7 @@ dep = math.floor(dep) -- converting floats to integers
 local function fuel()
 	if turtle.getFuelLevel() == 0 then -- if we need to refuel
 		turtle.select(16) -- we select the fuel ender chest
-		turtle.digUp() -- in case there is a block above us, we break it (this is the only time when we don't check to see if we have space to collect the block)
-		turtle.placeUp() -- we place it above our tiny little head
+		repeat turtle.digUp() until turtle.placeUp() -- make sure to free space above the turtle and place the chest
 		repeat until turtle.suckUp() -- we wait until we get fuel and place it in slot 16
 		turtle.refuel(turtle.getItemCount()) -- we refuel by the amount of items we sucked up from the chest
 		turtle.digUp() -- we remove the chest and place it in slot 16
@@ -30,8 +29,7 @@ local function check()
 	end
 	if empty == 0 then -- if we have no more space for new items we need to empty our inventory
 		turtle.select(15) -- we select the item drop chest
-		turtle.digUp() -- in case there is a block above us, we break it
-		turtle.placeUp() -- we place it above our head
+		repeat turtle.digUp() until turtle.placeUp() -- make sure to free space above the turtle and place the chest
 		for i=1, 14 do -- for every slot we use for pickups
 			turtle.select(i) -- select the slot in question
 			repeat until turtle.dropUp() -- we wait until we can drop all of our items in it
