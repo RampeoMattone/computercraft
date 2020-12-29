@@ -7,7 +7,7 @@ end
 
 -- scan the inventory to get all item id's and inventory slots
 -- returns 2 tables scan and scan_reverse
-local scan()
+local function scan()
 	local scan, scan_reverse = {}, {}
 	for i=1, 16 do
 		scan[i] = turtle.getItemDetail.name
@@ -22,9 +22,7 @@ end
 
 -- returns true if and only if the first item is closer to the starting point than the second
 local function compare(i1, i2)
-	if routing[i1][1] < routing[i2][1] then return true
-	elseif routing[i1][1] == routing[i2][1] then return routing[i1][2] < routing[i2][2]
-	else return false
+	return routing[i1] < routing[i2]
 end
 
 -- generate a "route" i.e. generate an ordered list of items
