@@ -1,8 +1,4 @@
 -- script created by GiappoNylon
-turtle.select(1)
-local routing = {}
-os.run(routing, "routing.dat")
-
 -- scan the inventory to get all item id's and inventory slots
 -- returns 2 tables scan and scan_reverse
 local function scan()
@@ -29,21 +25,39 @@ local function compare(i1, i2)
 end
 
 -- generate a "route" i.e. generate an ordered list of items
-local function route(inventory)
-	table.sort(inventory, compare)
-	return inventory
+local function route(inv)
+	table.sort(inv, compare) -- order each item based on distance from origin
+	local i = 1
+	while i < #inv do -- this loop will remove any duplicates in the ordered inventory scan, making it a list of items to deliver
+		if inv[i] == inv[i+1] then table.remove(inv, i)
+		else i = i+1
+		end
+	end
+	local 
+	return inv
 end
 
 turtle.select(1)
+local routing = {}
+os.run(routing, "routing.dat")
 local steps, pos = 0, 0
-local scan_f, scan_r = scan()
-for _, item in ipairs(route(scan_f)) do
+local inventory_list, inventory_map = scan()
+inventory_map = setmetatable(inventory_map, {
+   __index = function(table, key)	
+      if table[key] then return table[key]
+      else return 10
+      end
+   end
+})
+for _, item in ipairs(route(inventory_list)) do
 	steps = routing[item] - pos -- calculate how many steps to take
 	pos = routing[item]
 	for t=1, steps do repeat until turtle.forward() end -- take the steps
 	turtle.turnRight()
-	turtle.select(table.remove(scan_r[item]))
-	while not turtle.drop() or turtle.up do end
+	for _,slot in pairs(inventory_map[item]) do
+		turtle.select(slot)
+		while not turtle.drop() and turtle.up() do end
+	end
 	repeat until not turtle.down()
 	turtle.turnLeft()
 end
