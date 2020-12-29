@@ -10,7 +10,7 @@ end
 local function scan()
 	local scan, scan_reverse, i = {}, {}, 1
 	while turtle.suckUp() do
-		scan[i] = string.gsub(turtle.getItemDetail().name, ":", "_")
+		scan[i] = string.gsub(turtle.getItemDetail(i).name, ":", "_")
 		i = i + 1
 	end
 	for k,v in pairs(scan) do
