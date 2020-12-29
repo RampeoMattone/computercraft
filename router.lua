@@ -12,7 +12,7 @@ while turtle.suck() do
 		destination = tonumber(io.read())
 	until destination
 	destination = math.floor(destination)
-	routing.write('"' .. item  .. '"' .. "=" .. destination)
+	routing.write(item  .. "=" .. destination .. "\n")
 	turtle.dropUp()
 end
 routing.close()
