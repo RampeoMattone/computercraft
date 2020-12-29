@@ -13,7 +13,7 @@ while turtle.suckUp() do
 		destination = tonumber(io.read())
 	until destination
 	destination = math.floor(destination)
-	table.insert(routing, item, destination)
+	routing[item] = destination
 	turtle.dropDown()
 end
 for k, v in pairs(routing) do print(k, v) end
