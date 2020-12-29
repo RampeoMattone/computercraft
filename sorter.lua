@@ -1,5 +1,5 @@
 -- script created by GiappoNylon
-
+turtle.select(1)
 local routing = {}
 os.run(routing, "routing.dat")
 
@@ -34,17 +34,16 @@ local function route(inventory)
 	return inventory
 end
 
+turtle.select(1)
 local steps, pos = 0, 0
 local scan_f, scan_r = scan()
 for _, item in ipairs(route(scan_f)) do
-	print(item)
 	steps = routing[item] - pos -- calculate how many steps to take
 	pos = routing[item]
-	print(steps, pos) 
 	for t=1, steps do repeat until turtle.forward() end -- take the steps
 	turtle.turnRight()
-	turtle.select(table.remove(item_reverse[item]))
-	while not turtle.drop() and turtle.up do end
+	turtle.select(table.remove(scan_r[item]))
+	while not turtle.drop() or turtle.up do end
 	repeat until not turtle.down()
 	turtle.turnLeft()
 end
