@@ -33,7 +33,6 @@ local function route(inv)
 		else i = i+1
 		end
 	end
-	local 
 	return inv
 end
 
