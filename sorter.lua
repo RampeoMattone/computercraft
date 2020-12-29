@@ -8,9 +8,10 @@ end
 -- scan the inventory to get all item id's and inventory slots
 -- returns 2 tables scan and scan_reverse
 local function scan()
-	local scan, scan_reverse = {}, {}
-	for i=1, 16 do
+	local scan, scan_reverse, i = {}, {}, 1
+	while turtle.suckUp() do
 		scan[i] = string.gsub(turtle.getItemDetail().name, ":", "_")
+		i = i + 1
 	end
 	for k,v in pairs(scan) do
 		if not scan_reverse[v] then scan_reverse[v] = {k}
@@ -35,4 +36,4 @@ local function route()
 end
 
 getRouting()
-print(route())
+for k, v in pairs(route()) do print(k, v) end
