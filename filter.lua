@@ -9,13 +9,9 @@
 local filter_path = "disk/filter.dat"
 
 local function getFilter()
-	if not fs.exists(filter_path) then
-		local file = fs.open(filter_path, "w")
-		file.writeLine("return {\n}")
-		file.close()		
-	end
-	local filter = os.run({}, filter_path)
-	print(filter)	
+	local filter = {}
+	os.run(filter, filter_path)
+	print(filter)
 end
 
 local function appendFilter(item)
