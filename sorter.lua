@@ -6,17 +6,18 @@ os.run(routing, "routing.dat")
 -- scan the inventory to get all item id's and inventory slots
 -- returns 2 tables scan and scan_reverse
 local function scan()
-	local scan, scan_reverse, i = {}, {}, 1
+	local inv, map, i = {}, {}, 1
 	while turtle.suckUp() do
-		scan[i] = string.gsub(turtle.getItemDetail(i).name, ":", "_")
+		local item = string.gsub(turtle.getItemDetail(i).name, ":", "_")
+		inv[i] = item
+		if not map[item] then
+			map[item] = {i}
+		else
+			table.insert(map[item], i)
+		end
 		i = i + 1
 	end
-	for k,v in pairs(scan) do
-		if not scan_reverse[v] then scan_reverse[v] = {k}
-		else table.insert(scan_reverse[v], k)
-		end
-	end
-	return scan, scan_reverse
+	return inv, map
 end
 
 -- returns true if and only if the first item is closer to the starting point than the second
@@ -33,14 +34,6 @@ local function route(inventory)
 	return inventory
 end
 
-local function drop(item, item_reverse)
-	for slot in item_reverse[item] do
-		turtle.select(slot)
-		while not turtle.drop() and turtle.up do end
-	end
-	repeat until not turtle.down()
-end
-
 local steps, pos = 0, 0
 local scan_f, scan_r = scan()
 for _, item in ipairs(route(scan_f)) do
@@ -50,7 +43,9 @@ for _, item in ipairs(route(scan_f)) do
 	print(steps, pos) 
 	for t=1, steps do repeat until turtle.forward() end -- take the steps
 	turtle.turnRight()
-	drop(item)
+	turtle.select(table.remove(item_reverse[item]))
+	while not turtle.drop() and turtle.up do end
+	repeat until not turtle.down()
 	turtle.turnLeft()
 end
 for t=1, pos do repeat until turtle.back() end -- go back to the input chest
