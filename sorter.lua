@@ -2,7 +2,7 @@
 
 local routing = {}
 local function getRouting()
-	os.run(filter, "routing.dat")
+	os.run(routing, "routing.dat")
 end
 
 -- scan the inventory to get all item id's and inventory slots
@@ -10,7 +10,7 @@ end
 local function scan()
 	local scan, scan_reverse = {}, {}
 	for i=1, 16 do
-		scan[i] = string.gsub(turtle.getItemDetail().name, ":", "§")
+		scan[i] = string.gsub(turtle.getItemDetail().name, ":", "_")
 	end
 	for k,v in pairs(scan) do
 		if not scan_reverse[v] then scan_reverse[v] = {k}
