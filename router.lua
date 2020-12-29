@@ -17,3 +17,4 @@ while turtle.suckUp() do
 	routing.writeLine(item .. "=" .. destination)
 	turtle.dropDown()
 end
+routing.close()
