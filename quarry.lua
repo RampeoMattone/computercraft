@@ -23,11 +23,7 @@ end
 
 -- in order to dig without losing materials we use this function
 local function check()
-	local empty = 14 -- the turtle uses two slots out of 16 for ender chests. all other slots (14) can be used for pickups
-	for i=1, 14 do -- every time we dig we check to see if all our slots are full
-		if turtle.getItemCount(i) > 0 then empty = empty - 1 end -- every slot with an item count greater than zero is counted as "full"
-	end
-	if empty == 0 then -- if we have no more space for new items we need to empty our inventory
+	if turtle.getItemCount(14) ~= 0 then -- if we have no more space for new items we need to empty our inventory
 		turtle.select(15) -- we select the item drop chest
 		repeat turtle.digUp() until turtle.placeUp() -- make sure to free space above the turtle and place the chest
 		for i=1, 14 do -- for every slot we use for pickups
@@ -85,6 +81,7 @@ else
 	back = back_odd -- else we use this one
 end
 -- setup phase (break the first block and get in the corner of the selected area)
+turtle.select(1) -- select the default slot only this time for convenience
 check() -- check the inventory to see if it needs emptying
 fuel() -- before we move we need to check out fuel
 repeat turtle.digDown() until turtle.down() -- go down in the hole
