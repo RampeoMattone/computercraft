@@ -1,9 +1,7 @@
 -- script created by GiappoNylon
 
 local routing = {}
-local function getRouting()
-	os.run(routing, "routing.dat")
-end
+os.run(routing, "routing.dat")
 
 -- scan the inventory to get all item id's and inventory slots
 -- returns 2 tables scan and scan_reverse
@@ -30,11 +28,27 @@ local function compare(i1, i2)
 end
 
 -- generate a "route" i.e. generate an ordered list of items
-local function route()
-	local route, reverse = scan() -- route will be ordered from nearest to furthest from the turtle. reverse is a reverse table to match item id's with inv. slots
-	table.sort(route, compare)
-	return route
+local function route(inventory)
+	table.sort(inventory, compare)
+	return inventory
 end
 
-getRouting()
-for k, v in pairs(route()) do print(k, v) end
+local function drop(item, item_reverse)
+	for slot in item_reverse[item] do
+		turtle.select(slot)
+		while not turtle.drop() and turtle.up do end
+	end
+	repeat until not turtle.down()
+end
+
+local steps, pos = 0, 0
+local scan_f, scan_r = scan()
+for _, item in route(scan_f) do
+	steps = routing[item] - pos -- calculate how many steps to take
+	pos = routing[item] 
+	for t=1, steps do repeat until turtle.forward() end -- take the steps
+	turtle.turnRight()
+	drop(item)
+	turtle.turnLeft()
+end
+for t=1, pos do repeat until turtle.back() end -- go back to the input chest
