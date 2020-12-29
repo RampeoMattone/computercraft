@@ -3,7 +3,7 @@ while true do
 	for i=1, 16 do
 		turtle.select(i)
 		local item = turtle.getItemDetail()
-		if item.name == "minecraft:blaze_rod" then
+		if item and item.name == "minecraft:blaze_rod" then
 			repeat until turtle.dropUp()
 		else
 			turtle.dropDown()
