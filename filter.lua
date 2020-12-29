@@ -34,4 +34,5 @@ local function route()
 	return route
 end
 
+getRouting()
 print(route())
