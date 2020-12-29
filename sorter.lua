@@ -1,6 +1,11 @@
 -- script created by GiappoNylon
 
 local routing = {}
+local function setDefault (t, d)
+      local mt = {__index = function () return d end}
+      setmetatable(t, mt)
+end
+setDefault(routing, 10)
 
 -- scan the inventory to get all item id's and inventory slots
 -- returns 2 tables scan and scan_reverse
@@ -21,10 +26,7 @@ end
 
 -- returns true if and only if the first item is closer to the starting point than the second
 local function compare(i1, i2)
-	if routing[i1] and routing[i2] then return routing[i1] < routing[i2]
-	elseif routing[i1] then return true
-	else return false
-	end
+	return routing[i1] < routing[i2]
 end
 
 -- generate a "route" i.e. generate an ordered list of items
@@ -39,16 +41,12 @@ local function route(inv)
 	return inv
 end
 
-local function setDefault (t, d)
-      local mt = {__index = function () return d end}
-      setmetatable(t, mt)
-end
+
 
 turtle.select(1)
 os.run(routing, "routing.dat")
 local steps, pos = 0, 0
 local inventory_list, inventory_map = scan()
-setDefault(inventory_map, 10)
 for _, item in ipairs(route(inventory_list)) do
 	steps = routing[item] - pos -- calculate how many steps to take
 	pos = routing[item]
