@@ -13,6 +13,7 @@ while turtle.suckUp() do
 		destination = tonumber(io.read())
 	until destination
 	destination = math.floor(destination)
-	routing.write(string.gsub(item, ":", "§") .."="..destination.."\n")
+	item = string.gsub(item, ":", "§")
+	routing.writeLine(item .. "=" .. destination)
 	turtle.dropDown()
 end
