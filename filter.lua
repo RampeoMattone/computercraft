@@ -9,9 +9,8 @@
 local filter_path = "disk/filter.dat"
 
 local function getFilter()
-	local filter = {}
+	local filter = {} -- the filter is a long list of 
 	os.run(filter, filter_path)
-	print(filter)
 end
 
 local function appendFilter(item)
