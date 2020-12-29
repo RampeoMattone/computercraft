@@ -43,9 +43,11 @@ end
 
 local steps, pos = 0, 0
 local scan_f, scan_r = scan()
-for _, item in pairs(route(scan_f)) do
+for _, item in ipairs(route(scan_f)) do
+	print(item)
 	steps = routing[item] - pos -- calculate how many steps to take
-	pos = routing[item] 
+	pos = routing[item]
+	print(steps, pos) 
 	for t=1, steps do repeat until turtle.forward() end -- take the steps
 	turtle.turnRight()
 	drop(item)
