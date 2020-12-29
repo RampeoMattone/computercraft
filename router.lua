@@ -6,9 +6,10 @@ print("type next to each item where you want it to go")
 turtle.select(1)
 while turtle.suck() do
 	local item = turtle.getItemDetail().name
+	local destination
 	repeat
 		print(item, "goes to:")
-		local destination = tonumber(io.read())
+		destination = tonumber(io.read())
 	until destination
 	destination = math.floor(destination)
 	routing.write('"' .. item  '"' .. "=" .. destination)
