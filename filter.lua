@@ -10,7 +10,7 @@ end
 local function scan()
 	local scan, scan_reverse = {}, {}
 	for i=1, 16 do
-		scan[i] = turtle.getItemDetail.name
+		scan[i] = turtle.getItemDetail().name
 	end
 	for k,v in pairs(scan) do
 		if not scan_reverse[v] then scan_reverse[v] = {k}
@@ -22,7 +22,9 @@ end
 
 -- returns true if and only if the first item is closer to the starting point than the second
 local function compare(i1, i2)
-	return routing[i1] < routing[i2]
+	if i1 and i2 then return routing[i1] < routing[i2]
+	else return false
+	end
 end
 
 -- generate a "route" i.e. generate an ordered list of items
