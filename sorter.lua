@@ -75,7 +75,9 @@ setRoutes(1)
 while true do
 	local steps, pos = 0, 0
 	local inventory_list, inventory_map = scan()
-	for _, obj in ipairs(route(inventory_list)) do
+	local objects = route(inventory_list)
+	for i=1, #objects do
+		local obj = objects[i]
 		steps = routing[obj.mod][obj.item] - pos -- calculate how many steps to take
 		pos = routing[obj.mod][obj.item]
 		for t=1, steps do repeat fuel() until turtle.forward() end -- take the steps
