@@ -66,7 +66,7 @@ while true do
 		turtle.turnRight()
 		for _,slot in pairs(inventory_map[item]) do
 			turtle.select(slot)
-			repeat fuel() until turtle.drop or not turtle.up()
+			repeat fuel() until turtle.drop() or not turtle.up()
 		end
 		repeat fuel() until not turtle.down()
 		turtle.turnLeft()
