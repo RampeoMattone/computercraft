@@ -1,9 +1,6 @@
 -- script created by GiappoNylon
 
 local routing = {}
-local mt = {__index = function () return 10 end}
-setmetatable(routing, mt)
-
 
 -- scan the inventory to get all item id's and inventory slots
 -- returns 2 tables scan and scan_reverse
@@ -44,6 +41,8 @@ end
 
 turtle.select(1)
 os.run(routing, "routing.dat")
+local mt = {__index = function () return 10 end}
+setmetatable(routing, mt)
 local steps, pos = 0, 0
 local inventory_list, inventory_map = scan()
 for _, item in ipairs(route(inventory_list)) do
