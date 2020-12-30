@@ -26,6 +26,8 @@ local function scan()
 		inv[i] = {["mod"] = mod, ["item"] = item}
 		if not map[mod] then
 			map[mod] = {[item] = {i}}
+		elseif not map[mod][item] then
+			map[mod][item] = {i}
 		else
 			table.insert(map[mod][item], i)
 		end
