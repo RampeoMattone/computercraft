@@ -58,7 +58,9 @@ local function wildcards()
 	if not file then return end
 	-- serialize the wildcards table
 	for mod, destination in pairs(wildcards) do
-		file.writeLine(string.format("%s=%s", mod, destination))
+		if mod ~= "_ENV" then
+			file.writeLine(string.format("%s=%s", mod, destination))
+		end
 	end
 	file.close()
 	print("all done. your items are in the chest below :)")
