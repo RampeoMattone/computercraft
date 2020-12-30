@@ -43,18 +43,25 @@ turtle.select(1)
 os.run(routing, "routing.dat")
 local mt = {__index = function () return 10 end}
 setmetatable(routing, mt)
-local steps, pos = 0, 0
-local inventory_list, inventory_map = scan()
-for _, item in ipairs(route(inventory_list)) do
-	steps = routing[item] - pos -- calculate how many steps to take
-	pos = routing[item]
-	for t=1, steps do repeat until turtle.forward() end -- take the steps
-	turtle.turnRight()
-	for _,slot in pairs(inventory_map[item]) do
-		turtle.select(slot)
-		while not turtle.drop() and turtle.up() do end
+while true do
+	local steps, pos = 0, 0
+	local inventory_list, inventory_map = scan()
+	for _, item in ipairs(route(inventory_list)) do
+		steps = routing[item] - pos -- calculate how many steps to take
+		pos = routing[item]
+		for t=1, steps do repeat until turtle.forward() end -- take the steps
+		turtle.turnRight()
+		for _,slot in pairs(inventory_map[item]) do
+			turtle.select(slot)
+			while not turtle.detectUp() and not turtle.drop() do end
+		end
+		repeat until not turtle.down()
+		turtle.turnLeft()
 	end
-	repeat until not turtle.down()
-	turtle.turnLeft()
+	for t=1, pos do repeat until turtle.back() end -- go back to the input chest
+	for t=16, 1, -1 do
+		turtle.select(t)
+		turtle.dropDown()
+	end
+	sleep(30)
 end
-for t=1, pos do repeat until turtle.back() end -- go back to the input chest
