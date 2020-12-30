@@ -54,11 +54,9 @@ while true do
 		for _,slot in pairs(inventory_map[item]) do
 			turtle.select(slot)
 			while
-				not turtle.detectUp() and
-				not turtle.drop()
-			do
+				not turtle.drop() and
 				turtle.up()
-			end
+			do end
 		end
 		repeat until not turtle.down()
 		turtle.turnLeft()
