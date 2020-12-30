@@ -47,9 +47,13 @@ local function route(inv)
 	table.sort(inv, compare) -- order each item based on distance from origin
 	local i = 1
 	while i < #inv do -- this loop will remove any duplicates in the ordered inventory scan, making it a list of items to deliver
-		if inv[i].mod == inv[i+1].mod and inv[i].item == inv[i+1].item then table.remove(inv, i)
-		else i = i+1
+		local slot = i + 1
+		while slot <= #inv do
+			if inv[i].mod == inv[slot].mod and inv[i].item == inv[slot].item then table.remove(inv, slot)
+			else slot = slot + 1
+			end
 		end
+		i = i + 1
 	end
 	return inv
 end
@@ -78,6 +82,7 @@ while true do
 	local objects = route(inventory_list)
 	for i=1, #objects do
 		local obj = objects[i]
+		print("depositing", obj.item)
 		steps = routing[obj.mod][obj.item] - pos -- calculate how many steps to take
 		pos = routing[obj.mod][obj.item]
 		for t=1, steps do repeat fuel() until turtle.forward() end -- take the steps
