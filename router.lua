@@ -27,7 +27,7 @@ local function specific()
 	for mod in pairs(routing) do
 		file.writeLine(mod .. "={}")
 		for item, destination in pairs(routing[mod]) do
-			file.writeLine(string.format("%s[%s]=%s", mod, item, destination))
+			file.writeLine(string.format("%s[\"%s\"]=%s", mod, item, destination))
 		end
 	end
 	file.close()
