@@ -1,11 +1,9 @@
 -- script created by GiappoNylon
 
 local routing = {}
-local function setDefault (t, d)
-      local mt = {__index = function () return d end}
-      setmetatable(t, mt)
-end
-setDefault(routing, 10)
+local mt = {__index = function () return 10 end}
+setmetatable(routing, mt)
+
 
 -- scan the inventory to get all item id's and inventory slots
 -- returns 2 tables scan and scan_reverse
@@ -26,7 +24,8 @@ end
 
 -- returns true if and only if the first item is closer to the starting point than the second
 local function compare(i1, i2)
-	return routing[i1] < routing[i2]
+	local a, b = routing[i1], routing[i2]
+	return a < b
 end
 
 -- generate a "route" i.e. generate an ordered list of items
