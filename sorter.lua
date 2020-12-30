@@ -6,7 +6,7 @@ local routing = {}
 -- returns 2 tables scan and scan_reverse
 local function scan()
 	local inv, map, i = {}, {}, 1
-	while turtle.suckUp() and i ~= 15 do
+	while turtle.suckUp() and i ~= 16 do
 		local item = string.gsub(turtle.getItemDetail(i).name, ":", "_")
 		inv[i] = item
 		if not map[item] then
