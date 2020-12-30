@@ -53,7 +53,12 @@ while true do
 		turtle.turnRight()
 		for _,slot in pairs(inventory_map[item]) do
 			turtle.select(slot)
-			while not turtle.detectUp() and not turtle.drop() do end
+			while
+				not turtle.detectUp() and
+				not turtle.drop()
+			do
+				turtle.up()
+			end
 		end
 		repeat until not turtle.down()
 		turtle.turnLeft()
