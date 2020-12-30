@@ -55,13 +55,13 @@ end
 
 turtle.select(1)
 os.run(routing, "routing.dat")
-local mt = {__index = function () return 1 end}
+local mt = {__index = function () return 0 end}
 setmetatable(routing, mt)
 while true do
 	local steps, pos = 0, 0
 	local inventory_list, inventory_map = scan()
 	for _, item in ipairs(route(inventory_list)) do
-		steps = routing[item] - pos -- calculate how many steps to take
+		steps = routing[item] + 1 - pos -- calculate how many steps to take
 		pos = routing[item]
 		for t=1, steps do repeat fuel() until turtle.forward() end -- take the steps
 		turtle.turnRight()
