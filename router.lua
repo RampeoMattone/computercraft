@@ -7,8 +7,9 @@ print("type next to each item where you want it to go")
 while turtle.suckUp() do -- get an item from the chest
 	local id = turtle.getItemDetail().name -- get the item name
 	local destination -- mod name, item name, place to put the item
+	local mod, item
 	repeat -- ask the user where to put the item on sort
-		local mod, item = string.match(id, "(.+):(.+)")
+		mod, item = string.match(id, "(.+):(.+)")
 		print(mod, item, "\n where to?")
 		destination = tonumber(io.read())
 	until destination
