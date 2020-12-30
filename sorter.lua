@@ -38,15 +38,16 @@ local function route(inv)
 end
 
 -- refueler for the turtle. uses slot 16 to store the fuel ender chest
-local function fuel()
+local function fuel(return_to)
 	if turtle.getFuelLevel() == 0 then -- if we need to refuel because the level is critically low (aka 0)
-		turtle.select(1) -- we select the fuel ender chest
+		turtle.select(15) -- we select the fuel ender chest
 		turtle.turnLeft()
 		repeat until turtle.place() -- make sure to free space above the turtle and place the chest
 		repeat until turtle.suck() -- we wait until we get fuel and place it in slot 16
 		turtle.refuel(turtle.getItemCount()) -- we refuel by the amount of items we sucked up from the chest
 		turtle.dig() -- we remove the chest and place it in slot 16
 		turtle.turnRight()
+		turtle.select(return_to)
 	end
 end
 
@@ -64,7 +65,7 @@ while true do
 		turtle.turnRight()
 		for _,slot in pairs(inventory_map[item]) do
 			turtle.select(slot)
-			repeat fuel() until turtle.drop or not turtle.up()
+			repeat fuel(slot) until turtle.drop or not turtle.up()
 		end
 		repeat fuel() until not turtle.down()
 		turtle.turnLeft()
