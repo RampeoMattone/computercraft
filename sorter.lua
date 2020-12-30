@@ -1,19 +1,33 @@
 -- script created by GiappoNylon
 
 local routing = {}
+local function setRoutes(default)
+	os.run(routing, "disk/routing.dat") -- load specific routing
+	local wildcards = {}
+	os.run(wildcards, "disk/wildcards.dat") -- load wildcards
+	local wild_mt = {__index = function(mod) return wildcards[mod] end}
+	for mod in pairs(wildcards) do
+		if not routing[mod] then routing[mod] = {} end -- make sure the routing has every wildcarded mod mapped
+		setmetatable(routing[mod], wild_mt) -- if an item is not found, we look at the route for its mod
+	end
+	-- if the mod is not found we need to return a default route.
+	local default_route = {} -- because each mod is assigned a table of items, even the default route will need to have one
+	setmetatable(default_route, {__index = function() return default end}) -- this is where the magic happens
+	local general_mt = {__index = function() return default_route end} -- we assign the default route as the __index metamethod
+end
 
 -- scan the inventory to get all item id's and inventory slots
 -- returns 2 tables scan and scan_reverse
 local function scan()
-	local inv, map, i = {}, {}, 1
+	local inv, map = {}, {}
 	repeat turtle.suckUp() until turtle.getItemCount(15) ~= 0
 	for i=1, 15 do
-		local item = string.gsub(turtle.getItemDetail(i).name, ":", "_")
-		inv[i] = item
-		if not map[item] then
-			map[item] = {i}
+		local mod, item = string.match(turtle.getItemDetail(i).name, "(.+):(.+)")
+		inv[i] = {["mod"] = mod, ["item"] = item}
+		if not map[mod] then
+			map[mod] = {[item] = {i}}
 		else
-			table.insert(map[item], i)
+			table.insert(map[mod][item], i)
 		end
 	end
 	return inv, map
@@ -21,8 +35,8 @@ end
 
 -- returns true if and only if the first item is closer to the starting point than the second
 local function compare(i1, i2)
-	local a, b = routing[i1], routing[i2]
-	return a < b
+	local pos1, pos2 = routing[i1.mod][i1.item], routing[i2.mod][i2.item]
+	return pos1 < pos2
 end
 
 -- generate a "route" i.e. generate an ordered list of items
@@ -30,7 +44,7 @@ local function route(inv)
 	table.sort(inv, compare) -- order each item based on distance from origin
 	local i = 1
 	while i < #inv do -- this loop will remove any duplicates in the ordered inventory scan, making it a list of items to deliver
-		if inv[i] == inv[i+1] then table.remove(inv, i)
+		if inv[i].mod == inv[i+1].mod and inv[i].item == inv[i+1].item then table.remove(inv, i)
 		else i = i+1
 		end
 	end
@@ -52,19 +66,18 @@ local function fuel()
 	end
 end
 
+
 turtle.select(1)
-os.run(routing, "routing.dat")
-local mt = {__index = function () return 1 end}
-setmetatable(routing, mt)
+setRoutes(1)
 while true do
 	local steps, pos = 0, 0
 	local inventory_list, inventory_map = scan()
-	for _, item in ipairs(route(inventory_list)) do
-		steps = routing[item] - pos -- calculate how many steps to take
-		pos = routing[item]
+	for _, obj in ipairs(route(inventory_list)) do
+		steps = routing[obj.mod][obj.item] - pos -- calculate how many steps to take
+		pos = routing[obj.mod][obj.item]
 		for t=1, steps do repeat fuel() until turtle.forward() end -- take the steps
 		turtle.turnRight()
-		for _,slot in pairs(inventory_map[item]) do
+		for _,slot in pairs(inventory_map[obj.mod][obj.item]) do
 			turtle.select(slot)
 			repeat fuel() until turtle.drop() or not turtle.up()
 		end
