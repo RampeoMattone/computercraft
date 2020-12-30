@@ -6,8 +6,8 @@ local routing = {}
 -- returns 2 tables scan and scan_reverse
 local function scan()
 	local inv, map, i = {}, {}, 1
-	while i ~= 16 do
-		repeat until turtle.suckUp()
+	repeat turtle.suckUp() until turtle.getItemCount(15) ~= 0
+	for i=1, 15 do
 		local item = string.gsub(turtle.getItemDetail(i).name, ":", "_")
 		inv[i] = item
 		if not map[item] then
@@ -15,7 +15,6 @@ local function scan()
 		else
 			table.insert(map[item], i)
 		end
-		i = i + 1
 	end
 	return inv, map
 end
