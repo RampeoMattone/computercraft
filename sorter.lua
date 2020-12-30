@@ -6,7 +6,7 @@ local routing = {}
 -- returns 2 tables scan and scan_reverse
 local function scan()
 	local inv, map, i = {}, {}, 1
-	while turtle.suckUp() do
+	while turtle.suckUp() and i ~= 15 do
 		local item = string.gsub(turtle.getItemDetail(i).name, ":", "_")
 		inv[i] = item
 		if not map[item] then
@@ -37,7 +37,18 @@ local function route(inv)
 	return inv
 end
 
-
+-- refueler for the turtle. uses slot 16 to store the fuel ender chest
+local function fuel()
+	if turtle.getFuelLevel() == 0 then -- if we need to refuel because the level is critically low (aka 0)
+		turtle.select(1) -- we select the fuel ender chest
+		turtle.turnLeft()
+		repeat until turtle.place() -- make sure to free space above the turtle and place the chest
+		repeat until turtle.suck() -- we wait until we get fuel and place it in slot 16
+		turtle.refuel(turtle.getItemCount()) -- we refuel by the amount of items we sucked up from the chest
+		turtle.dig() -- we remove the chest and place it in slot 16
+		turtle.turnRight()
+	end
+end
 
 turtle.select(1)
 os.run(routing, "routing.dat")
@@ -49,22 +60,20 @@ while true do
 	for _, item in ipairs(route(inventory_list)) do
 		steps = routing[item] - pos -- calculate how many steps to take
 		pos = routing[item]
-		for t=1, steps do repeat until turtle.forward() end -- take the steps
+		for t=1, steps do repeat fuel() until turtle.forward() end -- take the steps
 		turtle.turnRight()
 		for _,slot in pairs(inventory_map[item]) do
 			turtle.select(slot)
-			while
-				not turtle.drop() and
-				turtle.up()
-			do end
+			repeat fuel() until turtle.drop or not turtle.up()
 		end
-		repeat until not turtle.down()
+		repeat fuel() until not turtle.down()
 		turtle.turnLeft()
 	end
-	for t=1, pos do repeat until turtle.back() end -- go back to the input chest
-	for t=16, 1, -1 do
+	for t=1, pos do
+		repeat fuel() until turtle.back()
+	end -- go back to the input chest
+	for t=15, 1, -1 do
 		turtle.select(t)
 		turtle.dropDown()
 	end
-	sleep(30)
 end
