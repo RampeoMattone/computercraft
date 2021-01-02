@@ -1,17 +1,18 @@
 -- script created by GiappoNylon
 
-local file = fs.open("disk/routing.dat", "r")
 local routing = {}
-if file then
-	routing = textutils.unserialise(file.readAll())
-	file.close()
-end
-local file = fs.open("disk/wildcards.dat", "r")
+local specific = {}
+	if fs.exists("disk/routing.dat") then
+		local file = fs.open("disk/routing.dat", "r")
+		specific = textutils.unserialise(file.readAll())
+		file.close()
+	end
 local wildcards = {}
-if file then
-	wildcards = textutils.unserialise(file.readAll())
-	file.close()
-end
+	if fs.exists("disk/wildcards.dat") then
+		local file = fs.open("disk/wildcards.dat", "r")
+		wildcards = textutils.unserialise(file.readAll())
+		file.close()
+	end
 
 local function setRoutes(default)
 	local function setDefaults(mod)

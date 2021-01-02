@@ -1,9 +1,9 @@
 -- script created by GiappoNylon
 --
 local function specific()
-	local file = fs.open("disk/routing.dat", "r")
 	local specific = {}
-	if file then
+	if fs.exists("disk/routing.dat") then
+		local file = fs.open("disk/routing.dat", "r")
 		specific = textutils.unserialise(file.readAll())
 		file.close()
 	end
@@ -35,9 +35,9 @@ local function specific()
 end
 
 local function wildcards()
-	local file = fs.open("disk/wildcards.dat", "r")
 	local wildcards = {}
-	if file then
+	if fs.exists("disk/wildcards.dat") then
+		local file = fs.open("disk/wildcards.dat", "r")
 		wildcards = textutils.unserialise(file.readAll())
 		file.close()
 	end
