@@ -1,4 +1,10 @@
 -- script created by GiappoNylon
+local config = {}
+	if fs.exists("disk/config.dat") then
+		local file = fs.open("disk/routing.dat", "r")
+		routing = textutils.unserialise(file.readAll())
+		file.close()
+	end
 
 local routing = {}
 	if fs.exists("disk/routing.dat") then
@@ -66,15 +72,17 @@ end
 -- generate a "route" i.e. generate an ordered list of items
 local function route(inv)
 	table.sort(inv, compare) -- order each item based on distance from origin
-	local i = 1
-	while i < #inv do -- this loop will remove any duplicates in the ordered inventory scan, making it a list of items to deliver
-		local slot = i + 1
-		while slot <= #inv do
-			if inv[i].mod == inv[slot].mod and inv[i].item == inv[slot].item then table.remove(inv, slot)
-			else slot = slot + 1
+	if config.cheapFuel then -- based on the config file, you may want to disable tho optio cheap fuel to have better sorting of items when using barrels
+		local i = 1
+		while i < #inv do -- this loop will remove any duplicates in the ordered inventory scan, making it a list of items to deliver
+			local slot = i + 1
+			while slot <= #inv do
+				if inv[i].mod == inv[slot].mod and inv[i].item == inv[slot].item then table.remove(inv, slot)
+				else slot = slot + 1
+				end
 			end
+			i = i + 1
 		end
-		i = i + 1
 	end
 	return inv
 end
