@@ -1,10 +1,13 @@
 -- script created by GiappoNylon
 
-local routing = {}
+local file = fs.open("disk/routing.dat", "r")
+local routing = textutils.unserialise(file.readAll())
+file.close()
+local file = fs.open("disk/wildcards.dat", "r")
+local wildcards = textutils.unserialise(file.readAll())
+file.close()
+
 local function setRoutes(default)
-	os.run(routing, "disk/routing.dat") -- load specific routing
-	local wildcards = {}
-	os.run(wildcards, "disk/wildcards.dat") -- load wildcards
 	local function setDefaults(mod)
 		if not routing[mod] then routing[mod] = {} end -- make sure the routing has every wildcarded mod mapped
 		local default_mod_mt = {__index = function()
@@ -36,8 +39,6 @@ local function scan()
 	repeat turtle.suckUp() until turtle.getItemCount(15) ~= 0
 	for i=1, 15 do
 		local mod, item = string.match(turtle.getItemDetail(i).name, "(.+):(.+)")
-		local mod = string.gsub(mod, "-", "_")
-		local item = string.gsub(item, "-", "_")
 		inv[i] = {["mod"] = mod, ["item"] = item}
 		if not map[mod] then
 			map[mod] = {[item] = {i}}

@@ -1,8 +1,9 @@
 -- script created by GiappoNylon
 --
 local function specific()
-	local specific = {}
-	os.run(specific, "disk/routing.dat") -- load the filter that has already been written to disk
+	local file = fs.open("disk/routing.dat", "r")
+	local specific = textutils.unserialise(file.readAll())
+	file.close()
 	turtle.select(1)
 	print("type next to each item where you want it to go")
 	while turtle.suckUp() do -- get an item from the chest
@@ -11,8 +12,6 @@ local function specific()
 		local mod, item
 		repeat -- ask the user where to put the item on sort
 			mod, item = string.match(id, "(.+):(.+)")
-			local mod = string.gsub(mod, "-", "_")
-			local item = string.gsub(item, "-", "_")
 			print(mod, item, "will be sent to:")
 			destination = tonumber(io.read())
 		until destination
@@ -23,24 +22,20 @@ local function specific()
 		specific[mod][item] = destination -- assign the item to a destination
 		turtle.dropDown() -- release the item
 	end
+	local json = textutils.serialise(specific)
 	local file = fs.open("disk/routing.dat", "w") -- file where we append all items and destinations
 	if not file then return end
 	-- serialize the routing table
-	for mod in pairs(specific) do
-		if mod ~= "_ENV" then -- generated because of us loading the previous routing table. we need to remove it from the file
-			file.writeLine(mod .. "={}")
-			for item, destination in pairs(specific[mod]) do
-				file.writeLine(string.format("%s[\"%s\"]=%s", mod, item, destination))
-			end
-		end
-	end
+	file.write(json)
 	file.close()
-	print("all done. your items are in the chest below :)")
 end
 
 local function wildcards()
-	local wildcards = {}
-	os.run(wildcards, "disk/wildcards.dat") -- load the filter that has already been written to disk
+	local file = fs.open("disk/wildcards.dat", "r")
+	local wildcards = textutils.unserialise(file.readAll())
+	file.close()
+	--local wildcards = {}
+	--os.run(wildcards, "disk/wildcards.dat") -- load the filter that has already been written to disk
 	turtle.select(1)
 	print("type next to each mod where you want it to go")
 	while turtle.suckUp() do -- get an item from the chest
@@ -56,16 +51,11 @@ local function wildcards()
 		wildcards[mod] = destination -- assign the mod to a destination
 		turtle.dropDown() -- release the item
 	end
+	local json = textutils.serialise(specific)
 	local file = fs.open("disk/wildcards.dat", "w") -- file where we append all items and destinations
 	if not file then return end
-	-- serialize the wildcards table
-	for mod, destination in pairs(wildcards) do
-		if mod ~= "_ENV" then
-			file.writeLine(string.format("%s=%s", mod, destination))
-		end
-	end
+	file.write(json)
 	file.close()
-	print("all done. your items are in the chest below :)")
 end
 
 local choice
@@ -76,3 +66,4 @@ until choice == "w" or choice == "s"
 if choice == "w" then wildcards()
 else specific()
 end
+print("all done. your items are in the chest below :)")
