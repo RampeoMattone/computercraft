@@ -1,11 +1,17 @@
 -- script created by GiappoNylon
 
 local file = fs.open("disk/routing.dat", "r")
-local routing = textutils.unserialise(file.readAll())
-file.close()
+local routing = {}
+if file then
+	routing = textutils.unserialise(file.readAll())
+	file.close()
+end
 local file = fs.open("disk/wildcards.dat", "r")
-local wildcards = textutils.unserialise(file.readAll())
-file.close()
+local wildcards = {}
+if file then
+	wildcards = textutils.unserialise(file.readAll())
+	file.close()
+end
 
 local function setRoutes(default)
 	local function setDefaults(mod)
