@@ -4,13 +4,13 @@ local routing = {}
 local specific = {}
 	if fs.exists("disk/routing.dat") then
 		local file = fs.open("disk/routing.dat", "r")
-		specific = textutils.unserialise(file.readAll())
+		specific = textutils.unserialiseJSON(file.readAll())
 		file.close()
 	end
 local wildcards = {}
 	if fs.exists("disk/wildcards.dat") then
 		local file = fs.open("disk/wildcards.dat", "r")
-		wildcards = textutils.unserialise(file.readAll())
+		wildcards = textutils.unserialiseJSON(file.readAll())
 		file.close()
 	end
 

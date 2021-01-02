@@ -4,7 +4,7 @@ local function specific()
 	local specific = {}
 	if fs.exists("disk/routing.dat") then
 		local file = fs.open("disk/routing.dat", "r")
-		specific = textutils.unserialise(file.readAll())
+		specific = textutils.unserialiseJSON(file.readAll())
 		file.close()
 	end
 	
@@ -26,7 +26,7 @@ local function specific()
 		specific[mod][item] = destination -- assign the item to a destination
 		turtle.dropDown() -- release the item
 	end
-	local json = textutils.serialise(specific)
+	local json = textutils.serialiseJSON(specific)
 	local file = fs.open("disk/routing.dat", "w") -- file where we append all items and destinations
 	if not file then return end
 	-- serialize the routing table
@@ -38,7 +38,7 @@ local function wildcards()
 	local wildcards = {}
 	if fs.exists("disk/wildcards.dat") then
 		local file = fs.open("disk/wildcards.dat", "r")
-		wildcards = textutils.unserialise(file.readAll())
+		wildcards = textutils.unserialiseJSON(file.readAll())
 		file.close()
 	end
 	--local wildcards = {}
@@ -58,7 +58,7 @@ local function wildcards()
 		wildcards[mod] = destination -- assign the mod to a destination
 		turtle.dropDown() -- release the item
 	end
-	local json = textutils.serialise(specific)
+	local json = textutils.serialiseJSON(wildcards)
 	local file = fs.open("disk/wildcards.dat", "w") -- file where we append all items and destinations
 	if not file then return end
 	file.write(json)
