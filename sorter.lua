@@ -7,17 +7,17 @@ local function setRoutes(default)
 	os.run(wildcards, "disk/wildcards.dat") -- load wildcards
 	for mod in pairs(wildcards) do
 		if not routing[mod] then routing[mod] = {} end -- make sure the routing has every wildcarded mod mapped
-		local wild_mt = {__index = function() return wildcards[mod] end}
+		local wild_mt = {__index = function() return wildcards[mod] or default end}
 		setmetatable(routing[mod], wild_mt) -- if an item is not found, we look at the route for its mod
 	end
 	-- if the mod is not found we need to return a default route.
 	local default_route = {} -- because each mod is assigned a table of items, even the default route will need to have one
 	setmetatable(default_route, {__index = function() return default end}) -- this is where the magic happens
-	-- local general_mt = {__index = function() return default_route end} -- we assign the default route as the __index metamethod
-	setmetatable(routing, default_route) -- this is where the magic happens pt 2
+	local general_mt = {__index = function() return default_route end} -- we assign the default route as the __index metamethod
+	setmetatable(routing, general_mt) -- this is where the magic happens pt 2
 end
 
--- scan the inventory to get all item id's and inventory slots
+-- scan the inventory to get all item id's and inventory slots<
 -- returns 2 tables scan and scan_reverse
 local function scan()
 	local inv, map = {}, {}
