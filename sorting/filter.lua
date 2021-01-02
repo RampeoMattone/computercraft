@@ -16,8 +16,6 @@ local function bulk()
 	while turtle.suckDown() do -- get an item from the chest
 		local id = turtle.getItemDetail().name -- get the item name
 		local mod, item = string.match(id, "(.+):(.+)")
-		local destination -- mod name, item name, place to put the item
-		local mod, item
 		destination = math.floor(destination) -- make sure the number we received is an integer
 		if not specific[mod] then -- generate an entry for the mod if it does not already exist
 			specific[mod] = {}
