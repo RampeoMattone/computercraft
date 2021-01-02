@@ -12,6 +12,7 @@ local function setRoutes(default)
 			return wildcards[mod]
 			else return default
 			end
+		end
 		}
 		setmetatable(routing[mod], default_mod_mt) -- if an item is not found, we look at the route for its mod
 	end
@@ -35,7 +36,7 @@ local function scan()
 	repeat turtle.suckUp() until turtle.getItemCount(15) ~= 0
 	for i=1, 15 do
 		local mod, item = string.match(turtle.getItemDetail(i).name, "(.+):(.+)")
-		inv[i] = {["mod"] = mod, ["item"] = item}
+		inv[i] = {["mod"] = string.gsub(mod, "-", "_"), ["item"] = item}
 		if not map[mod] then
 			map[mod] = {[item] = {i}}
 		elseif not map[mod][item] then

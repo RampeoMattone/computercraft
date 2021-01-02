@@ -26,7 +26,7 @@ local function specific()
 	-- serialize the routing table
 	for mod in pairs(specific) do
 		if mod ~= "_ENV" then -- generated because of us loading the previous routing table. we need to remove it from the file
-			file.writeLine(mod .. "={}")
+			file.writeLine(string.gsub(mod, "-", "_") .. "={}")
 			for item, destination in pairs(specific[mod]) do
 				file.writeLine(string.format("%s[\"%s\"]=%s", mod, item, destination))
 			end
