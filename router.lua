@@ -3,10 +3,12 @@
 local function specific()
 	local file = fs.open("disk/routing.dat", "r")
 	local specific
-	if file then specific = textutils.unserialise(file.readAll())
+	if file then
+		specific = textutils.unserialise(file.readAll())
+		file.close()
 	else specific = {}
 	end
-	file.close()
+	
 	turtle.select(1)
 	print("type next to each item where you want it to go")
 	while turtle.suckUp() do -- get an item from the chest
@@ -36,10 +38,11 @@ end
 local function wildcards()
 	local file = fs.open("disk/wildcards.dat", "r")
 	local wildcards
-	if file then wildcards = textutils.unserialise(file.readAll())
+	if file then
+		wildcards = textutils.unserialise(file.readAll())
+		file.close()
 	else wildcards = {}
 	end
-	file.close()
 	--local wildcards = {}
 	--os.run(wildcards, "disk/wildcards.dat") -- load the filter that has already been written to disk
 	turtle.select(1)
