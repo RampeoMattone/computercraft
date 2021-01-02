@@ -11,6 +11,8 @@ local function specific()
 		local mod, item
 		repeat -- ask the user where to put the item on sort
 			mod, item = string.match(id, "(.+):(.+)")
+			local mod = string.gsub(mod, "-", "_")
+			local item = string.gsub(item, "-", "_")
 			print(mod, item, "will be sent to:")
 			destination = tonumber(io.read())
 		until destination
@@ -25,11 +27,9 @@ local function specific()
 	if not file then return end
 	-- serialize the routing table
 	for mod in pairs(specific) do
-		local mod = string.gsub(mod, "-", "_")
 		if mod ~= "_ENV" then -- generated because of us loading the previous routing table. we need to remove it from the file
 			file.writeLine(mod .. "={}")
 			for item, destination in pairs(specific[mod]) do
-				local item = string.gsub(item, "-", "_")
 				file.writeLine(string.format("%s[\"%s\"]=%s", mod, item, destination))
 			end
 		end
