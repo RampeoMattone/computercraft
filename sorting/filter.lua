@@ -103,6 +103,7 @@ repeat --ask the user what he wants to set up (wildcards/specific routes)
 	choice = io.read():lower()
 until choice == "w" or choice == "s" or choice == "b"
 if choice == "w" then wildcards()
-else specific()
+elseif choice == "s" then specific()
+else bulk()
 end
 print("all done. your items are in the chest below :)")
