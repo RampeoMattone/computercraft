@@ -1,10 +1,9 @@
 -- script created by GiappoNylon
 
 local routing = {}
-local specific = {}
 	if fs.exists("disk/routing.dat") then
 		local file = fs.open("disk/routing.dat", "r")
-		specific = textutils.unserialise(file.readAll())
+		routing = textutils.unserialise(file.readAll())
 		file.close()
 	end
 local wildcards = {}
