@@ -13,8 +13,8 @@ local function setRoutes(default)
 	-- if the mod is not found we need to return a default route.
 	local default_route = {} -- because each mod is assigned a table of items, even the default route will need to have one
 	setmetatable(default_route, {__index = function() return default end}) -- this is where the magic happens
-	local general_mt = {__index = function() return default_route end} -- we assign the default route as the __index metamethod
-	setmetatable(routing, general_mt) -- this is where the magic happens pt 2
+	-- local general_mt = {__index = function() return default_route end} -- we assign the default route as the __index metamethod
+	setmetatable(routing, default_route) -- this is where the magic happens pt 2
 end
 
 -- scan the inventory to get all item id's and inventory slots
